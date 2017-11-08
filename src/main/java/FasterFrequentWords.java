@@ -1,14 +1,16 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Created by maria on 01/11/17.
  */
-public class FasterFrequentWords {
+public class FasterFrequentWords extends FrequentWords {
 
-    public static void FasterFrequentWords(String text, Integer k) {
+    public static void FasterFrequentWords(String text, Integer k) throws Exception{
 
-        ArrayList<String> frequentPatterns = new ArrayList<String>();
+        text = text.replace("\n", "").replace("\r", "");
 
+        HashSet<String> frequentPatterns = new HashSet<String>();
         ArrayList<Integer> FrequencyArray = ComputingFrequencies(text,k);
 
         int maxCount = FrequencyArray.get(0);
@@ -19,7 +21,6 @@ public class FasterFrequentWords {
             else {continue;}
         }
 
-        System.out.println("maxCount = " + maxCount);
 
         for (int i = 0; i < FrequencyArray.size(); i++) {
             if (FrequencyArray.get(i) == maxCount) {
@@ -28,13 +29,12 @@ public class FasterFrequentWords {
             }
         }
 
-        for (int i = 0; i < frequentPatterns.size(); i++) {
-            System.out.println(frequentPatterns.get(i));
-        }
+        System.out.println(frequentPatterns);
+
 
     }
 
-    public static ArrayList<Integer> ComputingFrequencies(String text, Integer k) {
+    public static ArrayList<Integer> ComputingFrequencies(String text, Integer k) throws Exception{
 
         ArrayList<Integer> frequencyArray = new ArrayList<Integer>();
 
@@ -43,25 +43,19 @@ public class FasterFrequentWords {
             frequencyArray.add(0);
         }
 
-        System.out.println("Size of freq array: " + frequencyArray.size());
-
-        for (int i = 0; i < text.length()-k; i++) {
+        for (int i = 0; i < (text.length()-k)+1; i++) {
 
             String pattern = text.substring(i,i+k);
-            //System.out.println("pattern: " + pattern);
             int j = PatternToNumber(pattern);
-            //System.out.println("PatternToNumber: " + j);
             int f = frequencyArray.get(j);
-            //System.out.println("f: " + j);
-            frequencyArray.remove(j);
-            frequencyArray.add(j,f+1);
+            frequencyArray.set(j,f+1);
 
-        }
+            }
 
         return frequencyArray;
     }
 
-    public static String NumberToPattern(Integer index, Integer k) {
+    public static String NumberToPattern(Integer index, Integer k) throws Exception{
 
         if (k == 1) {
             return NumberToSymbol(index);
@@ -78,7 +72,7 @@ public class FasterFrequentWords {
         }
     }
 
-    public static Integer PatternToNumber(String pattern) {
+    public static Integer PatternToNumber(String pattern) throws Exception{
 
         if (pattern.equals("")) {
             return 0;
@@ -91,44 +85,43 @@ public class FasterFrequentWords {
         }
     }
 
-    public static Integer SymbolToNumber(String c) {
+    public static Integer SymbolToNumber(String c) throws Exception{
 
-        String s = c.toLowerCase();
+        String s = c.toUpperCase();
 
-        if (s.equals("a")) {
+        if (s.equals("A")) {
             return 0;
         }
-        else if (s.equals("c")) {
+        else if (s.equals("C")) {
             return 1;
         }
-        else if (s.equals("g")) {
+        else if (s.equals("G")) {
             return 2;
         }
         else {
             return 3;
         }
 
+
     }
 
-    public static String NumberToSymbol(Integer i) {
+    public static String NumberToSymbol(Integer i) throws Exception{
 
         if (i == 0) {
-            return "a";
+            return "A";
         }
         else if (i == 1) {
-            return "c";
+            return "C";
         }
         else if (i == 2) {
-            return "g";
+            return "G";
         }
         else {
-            return "t";
+            return "T";
         }
 
     }
 
-    public static void main(String args[]) {
-        FasterFrequentWords("atcaatgatcaacgtaagcttctaagcatgatcaaggtgctcacacagtttatccacaacctgagtggatgacatcaagataggtcgttgtatctccttcctctcgtactctcatgaccacggaaagatgatcaagagaggatgatttcttggccatatcgcaatgaatacttgtgacttgtgcttccaattgacatcttcagcgccatattgcgctggccaaggtgacggagcgggattacgaaagcatgatcatggctgttgttctgtttatcttgttttgactgagacttgttaggatagacggtttttcatcactgactagccaaagccttactctgcctgacatcgaccgtaaattgataatgaatttacatgcttccgcgacgatttacctcttgatcatcgatccgattgaagatcttcaattgttaattctcttgcctcgactcatagccatgatgagctcttgatcatgtttccttaaccctctattttttacggaagaatgatcaagctgctgctcttgatcatcgtttc",9);
-    }
+    public static void main(String args[]) throws Exception{}
 
 }

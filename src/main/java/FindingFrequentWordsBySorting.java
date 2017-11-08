@@ -1,33 +1,33 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Created by maria on 02/11/17.
  */
 public class FindingFrequentWordsBySorting extends FasterFrequentWords{
 
-    public static void FindingFrequentWordsBySorting(String text, Integer k) {
+    public static void FindingFrequentWordsBySorting(String text, Integer k) throws Exception{
 
+        text = text.replace("\n", "").replace("\r", "");
 
-        ArrayList<String> frequentPatterns = new ArrayList<String>();
+        HashSet<String> frequentPatterns = new HashSet<String>();
         ArrayList<Integer> count = new ArrayList<Integer>();
         ArrayList<Integer> index = new ArrayList<Integer>(text.length()-k);
 
-        for (int i = 0; i < text.length()-k; i++) {
+        for (int i = 0; i < (text.length()-k)+1; i++) {
             String pattern = text.substring(i,i+k);
             index.add(i,PatternToNumber(pattern));
-            //System.out.println(pattern + " :" + PatternToNumber(pattern) );
             count.add(i,1);
         }
 
         Collections.sort(index);
 
-        for (int i = 1; i < text.length()-k; i++) {
+        for (int i = 1; i < (text.length()-k)+1; i++) {
             if(index.get(i).equals(index.get(i-1))) {
                 int cc = count.get(i-1);
                 count.remove(i);
                 count.add(i,cc+1);
-                //System.out.println(i + " :" + (cc+1));
             }
         }
 
@@ -40,21 +40,34 @@ public class FindingFrequentWordsBySorting extends FasterFrequentWords{
         }
 
 
-        for (int i = 0; i < text.length()-k; i++) {
+        for (int i = 0; i < (text.length()-k)+1; i++) {
            if (count.get(i) == maxCount) {
                String pattern = NumberToPattern(index.get(i),k);
                frequentPatterns.add(pattern);
            }
         }
 
-        for (int i = 0; i < frequentPatterns.size(); i++) {
-            System.out.println(frequentPatterns.get(i));
-        }
+        System.out.println(frequentPatterns);
 
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception{
+
+        FrequentWords("aaaaaaaaaa",2);
+        FasterFrequentWords("aaaaaaaaaa",2);
+        FindingFrequentWordsBySorting("aaaaaaaaaa",2);
+
+        FrequentWords("atcaatgatcaacgtaagcttctaagcatgatcaaggtgctcacacagtttatccacaacctgagtggatgacatcaagataggtcgttgtatctccttcctctcgtactctcatgaccacggaaagatgatcaagagaggatgatttcttggccatatcgcaatgaatacttgtgacttgtgcttccaattgacatcttcagcgccatattgcgctggccaaggtgacggagcgggattacgaaagcatgatcatggctgttgttctgtttatcttgttttgactgagacttgttaggatagacggtttttcatcactgactagccaaagccttactctgcctgacatcgaccgtaaattgataatgaatttacatgcttccgcgacgatttacctcttgatcatcgatccgattgaagatcttcaattgttaattctcttgcctcgactcatagccatgatgagctcttgatcatgtttccttaaccctctattttttacggaagaatgatcaagctgctgctcttgatcatcgtttc",9);
+        FasterFrequentWords("atcaatgatcaacgtaagcttctaagcatgatcaaggtgctcacacagtttatccacaacctgagtggatgacatcaagataggtcgttgtatctccttcctctcgtactctcatgaccacggaaagatgatcaagagaggatgatttcttggccatatcgcaatgaatacttgtgacttgtgcttccaattgacatcttcagcgccatattgcgctggccaaggtgacggagcgggattacgaaagcatgatcatggctgttgttctgtttatcttgttttgactgagacttgttaggatagacggtttttcatcactgactagccaaagccttactctgcctgacatcgaccgtaaattgataatgaatttacatgcttccgcgacgatttacctcttgatcatcgatccgattgaagatcttcaattgttaattctcttgcctcgactcatagccatgatgagctcttgatcatgtttccttaaccctctattttttacggaagaatgatcaagctgctgctcttgatcatcgtttc",9);
         FindingFrequentWordsBySorting("atcaatgatcaacgtaagcttctaagcatgatcaaggtgctcacacagtttatccacaacctgagtggatgacatcaagataggtcgttgtatctccttcctctcgtactctcatgaccacggaaagatgatcaagagaggatgatttcttggccatatcgcaatgaatacttgtgacttgtgcttccaattgacatcttcagcgccatattgcgctggccaaggtgacggagcgggattacgaaagcatgatcatggctgttgttctgtttatcttgttttgactgagacttgttaggatagacggtttttcatcactgactagccaaagccttactctgcctgacatcgaccgtaaattgataatgaatttacatgcttccgcgacgatttacctcttgatcatcgatccgattgaagatcttcaattgttaattctcttgcctcgactcatagccatgatgagctcttgatcatgtttccttaaccctctattttttacggaagaatgatcaagctgctgctcttgatcatcgtttc",9);
+
+        System.out.println(PatternToNumber("TGATTTCAA"));
+        System.out.println(NumberToPattern(233424,9));
+        FrequentWords("GTTAACCGCTCAGGGCTCTTTTTGAAATCTCTCC\n" +
+                "TATCACTTCATCGATCAGGCTCTTCAGTTGTTTGTTCCCTTTGAGGAGGGAATCTTTGACTCTTTTGACACTGTCTAAAACAACAGGGTGTGACCTGTTGAATTTCTCCGCTATCGTTCTCAGAGAACTATTCAGATGGTTCTTGGCCACGTACATACCAATTCGTCTGGCTGTGAGAGCCTTAACGTTTCTGTTGTTGGAAAGGATCTCTTCACGTGAAACACCAGTTACTTTTGCAACGATCTCTATGAGTTCATCTATTGGATCCATGGCTTTTACTCTGTTTGGCTTTATGAAGTCTTTCAGGAGCAAGATGGCTTCTCTCAGATCGACCTCTTTTCCCGTCGTTTCCTTGTAAACCAGAAGCTTTATAATGGCTCCTCTGAGTCTTCGCAGGTTATCGTCCACGTTCTCTGCGACAAAATTCAGAACTTCTTCAGGAAGTTCACCATGCTCGATTTCAAGCATCTTTTTCGCAATGCTCTTCCTCGTTTCCTCGTCGGGGGGCTCTAACTTCGCCACGAGCCCCATTTGAAATCTGGAAACCAGCCTATCCTGAAACTCACTCAATTTTTGAGGTTCTCTGTCTGAACAAATGACGATTTGTTTTCCGGAATCGTGCAGTTCGTTGAAGGTGTGGAACAGTTCCGTCTGAACCCCTGTCTTTCCTATGAGAAACTGGACATCGTCTATGAGAAGAATATCAACCTTTTTTCTGTATTTCTCCCTGAATTCATTCAGCTTTCCTTCCTTCATACTGTCAACAAGGTCGTTCAAGAATTTCTCACTGGTGATGTACATCACCCTCAGATCTGGTTCGTTCTGGACAACGTAGTTCCCTATCGACTGAAGAAGGTGCGTCTTCCCAAGTCCGACACCACCGTATATGAAGAGTGGATTGTATCTTCCTGGATGTTTTGCCACTTCGAGAGCGGCGTGATAAGCAAACGAATTTCCCGGACCAACGACGAAATTTTCGAAGGTGTAATCAGGATTCAGTGGTGTGAGAAGCACCGCTCTTTTCTTCACAAGAGGTTCGCTGTAAGAGGAGTGAGGTTCAAAGGCTTCGTAAGTGATTTCAAAAGTGGCGTCGTTTCCGAGCACAACTTTCACGGCTTTTGAGAGAACAGAATGATACTTCTTCTCCAGCCATTCTTTTATGAAAAGATTACCGACCGAGAAGACAACCTTGTTACCCTCTATCGATCTCACATCAAAAGAACTGAACCAGAGTTCCCAGCTTTTTCTGTTTACCCTGGTCTTTATTTCCT",9);
+        FasterFrequentWords("GTTAACCGCTCAGGGCTCTTTTTG\n" + "AAATCTCTCCTATCACTTCATCGATCAGGCTCTTCAGTTGTTTGTTCCCTTTGAGGAGGGAATCTTTGACTCTTTTGACACTGTCTAAAACAACAGGGTGTGACCTGTTGAATTTCTCCGCTATCGTTCTCAGAGAACTATTCAGATGGTTCTTGGCCACGTACATACCAATTCGTCTGGCTGTGAGAGCCTTAACGTTTCTGTTGTTGGAAAGGATCTCTTCACGTGAAACACCAGTTACTTTTGCAACGATCTCTATGAGTTCATCTATTGGATCCATGGCTTTTACTCTGTTTGGCTTTATGAAGTCTTTCAGGAGCAAGATGGCTTCTCTCAGATCGACCTCTTTTCCCGTCGTTTCCTTGTAAACCAGAAGCTTTATAATGGCTCCTCTGAGTCTTCGCAGGTTATCGTCCACGTTCTCTGCGACAAAATTCAGAACTTCTTCAGGAAGTTCACCATGCTCGATTTCAAGCATCTTTTTCGCAATGCTCTTCCTCGTTTCCTCGTCGGGGGGCTCTAACTTCGCCACGAGCCCCATTTGAAATCTGGAAACCAGCCTATCCTGAAACTCACTCAATTTTTGAGGTTCTCTGTCTGAACAAATGACGATTTGTTTTCCGGAATCGTGCAGTTCGTTGAAGGTGTGGAACAGTTCCGTCTGAACCCCTGTCTTTCCTATGAGAAACTGGACATCGTCTATGAGAAGAATATCAACCTTTTTTCTGTATTTCTCCCTGAATTCATTCAGCTTTCCTTCCTTCATACTGTCAACAAGGTCGTTCAAGAATTTCTCACTGGTGATGTACATCACCCTCAGATCTGGTTCGTTCTGGACAACGTAGTTCCCTATCGACTGAAGAAGGTGCGTCTTCCCAAGTCCGACACCACCGTATATGAAGAGTGGATTGTATCTTCCTGGATGTTTTGCCACTTCGAGAGCGGCGTGATAAGCAAACGAATTTCCCGGACCAACGACGAAATTTTCGAAGGTGTAATCAGGATTCAGTGGTGTGAGAAGCACCGCTCTTTTCTTCACAAGAGGTTCGCTGTAAGAGGAGTGAGGTTCAAAGGCTTCGTAAGTGATTTCAAAAGTGGCGTCGTTTCCGAGCACAACTTTCACGGCTTTTGAGAGAACAGAATGATACTTCTTCTCCAGCCATTCTTTTATGAAAAGATTACCGACCGAGAAGACAACCTTGTTACCCTCTATCGATCTCACATCAAAAGAACTGAACCAGAGTTCCCAGCTTTTTCTGTTTACCCTGGTCTTTATTTCCT",9);
+        FindingFrequentWordsBySorting("GTTAACCGCTCAGGGCTCTTT\n" + "TTGAAATCTCTCCTATCACTTCATCGATCAGGCTCTTCAGTTGTTTGTTCCCTTTGAGGAGGGAATCTTTGACTCTTTTGACACTGTCTAAAACAACAGGGTGTGACCTGTTGAATTTCTCCGCTATCGTTCTCAGAGAACTATTCAGATGGTTCTTGGCCACGTACATACCAATTCGTCTGGCTGTGAGAGCCTTAACGTTTCTGTTGTTGGAAAGGATCTCTTCACGTGAAACACCAGTTACTTTTGCAACGATCTCTATGAGTTCATCTATTGGATCCATGGCTTTTACTCTGTTTGGCTTTATGAAGTCTTTCAGGAGCAAGATGGCTTCTCTCAGATCGACCTCTTTTCCCGTCGTTTCCTTGTAAACCAGAAGCTTTATAATGGCTCCTCTGAGTCTTCGCAGGTTATCGTCCACGTTCTCTGCGACAAAATTCAGAACTTCTTCAGGAAGTTCACCATGCTCGATTTCAAGCATCTTTTTCGCAATGCTCTTCCTCGTTTCCTCGTCGGGGGGCTCTAACTTCGCCACGAGCCCCATTTGAAATCTGGAAACCAGCCTATCCTGAAACTCACTCAATTTTTGAGGTTCTCTGTCTGAACAAATGACGATTTGTTTTCCGGAATCGTGCAGTTCGTTGAAGGTGTGGAACAGTTCCGTCTGAACCCCTGTCTTTCCTATGAGAAACTGGACATCGTCTATGAGAAGAATATCAACCTTTTTTCTGTATTTCTCCCTGAATTCATTCAGCTTTCCTTCCTTCATACTGTCAACAAGGTCGTTCAAGAATTTCTCACTGGTGATGTACATCACCCTCAGATCTGGTTCGTTCTGGACAACGTAGTTCCCTATCGACTGAAGAAGGTGCGTCTTCCCAAGTCCGACACCACCGTATATGAAGAGTGGATTGTATCTTCCTGGATGTTTTGCCACTTCGAGAGCGGCGTGATAAGCAAACGAATTTCCCGGACCAACGACGAAATTTTCGAAGGTGTAATCAGGATTCAGTGGTGTGAGAAGCACCGCTCTTTTCTTCACAAGAGGTTCGCTGTAAGAGGAGTGAGGTTCAAAGGCTTCGTAAGTGATTTCAAAAGTGGCGTCGTTTCCGAGCACAACTTTCACGGCTTTTGAGAGAACAGAATGATACTTCTTCTCCAGCCATTCTTTTATGAAAAGATTACCGACCGAGAAGACAACCTTGTTACCCTCTATCGATCTCACATCAAAAGAACTGAACCAGAGTTCCCAGCTTTTTCTGTTTACCCTGGTCTTTATTTCCT",9);
     }
+
 
 }
